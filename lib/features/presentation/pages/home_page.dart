@@ -141,133 +141,6 @@ class _HomePageState extends State<HomePage> {
 
                   const SizedBox(height: 20),
 
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      /// 📅 DATE FILTER CHIP
-                      SizedBox(
-                        height: 40,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            "All",
-                            "Today",
-                            "7 Days",
-                            "30 Days",
-                            "Custom"
-                          ].map((label) {
-                            final isSelected = selectedDateFilter == label;
-
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: ChoiceChip(
-                                label: Text(label),
-                                selected: isSelected,
-                                onSelected: (_) async {
-                                  if (label == "Custom") {
-                                    final picked = await showDateRangePicker(
-                                      context: context,
-                                      firstDate: DateTime(2020),
-                                      lastDate: DateTime(2100),
-                                    );
-
-                                    if (picked != null) {
-                                      setState(() {
-                                        startDate = picked.start;
-                                        endDate = picked.end;
-                                        selectedDateFilter = "Custom";
-                                      });
-                                    }
-                                  } else {
-                                    setState(() {
-                                      selectedDateFilter = label;
-                                    });
-                                  }
-                                },
-                                selectedColor: Colors.blue,
-                                labelStyle: TextStyle(
-                                  color:
-                                      isSelected ? Colors.white : Colors.black,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-
-                      SizedBox(height: 10),
-
-                      /// 📂 CATEGORY CHIP
-                      BlocBuilder<CategoryCubit, CategoryState>(
-                        builder: (context, state) {
-                          return SizedBox(
-                            height: 40,
-                            child: ListView(
-                              scrollDirection: Axis.horizontal,
-                              children: [
-                                /// ALL CHIP
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8),
-                                  child: ChoiceChip(
-                                    label: Text("Semua"),
-                                    selected: selectedCategoryFilter == null,
-                                    onSelected: (_) {
-                                      setState(
-                                          () => selectedCategoryFilter = null);
-                                    },
-                                  ),
-                                ),
-
-                                ...state.categories.map((cat) {
-                                  final isSelected =
-                                      selectedCategoryFilter == cat.name;
-
-                                  return Padding(
-                                    padding: const EdgeInsets.only(right: 8),
-                                    child: ChoiceChip(
-                                      label: Text(cat.name),
-                                      selected: isSelected,
-                                      selectedColor: Colors.green,
-                                      labelStyle: TextStyle(
-                                        color: isSelected
-                                            ? Colors.white
-                                            : Colors.black,
-                                      ),
-                                      onSelected: (_) {
-                                        setState(() {
-                                          selectedCategoryFilter =
-                                              isSelected ? null : cat.name;
-                                        });
-                                      },
-                                    ),
-                                  );
-                                }).toList(),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
-
-                      SizedBox(height: 10),
-
-                      /// 🔄 RESET
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: TextButton(
-                          onPressed: () {
-                            setState(() {
-                              selectedCategoryFilter = null;
-                              selectedDateFilter = "All";
-                              startDate = null;
-                              endDate = null;
-                            });
-                          },
-                          child: Text("Reset Filter"),
-                        ),
-                      )
-                    ],
-                  ),
-
                   const Text(
                     "Tambah Pengeluaran",
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -464,6 +337,124 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                /// 📅 DATE FILTER CHIP
+                SizedBox(
+                  height: 40,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: ["All", "Today", "7 Days", "30 Days", "Custom"]
+                        .map((label) {
+                      final isSelected = selectedDateFilter == label;
+
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ChoiceChip(
+                          label: Text(label),
+                          selected: isSelected,
+                          onSelected: (_) async {
+                            if (label == "Custom") {
+                              final picked = await showDateRangePicker(
+                                context: context,
+                                firstDate: DateTime(2020),
+                                lastDate: DateTime(2100),
+                              );
+
+                              if (picked != null) {
+                                setState(() {
+                                  startDate = picked.start;
+                                  endDate = picked.end;
+                                  selectedDateFilter = "Custom";
+                                });
+                              }
+                            } else {
+                              setState(() {
+                                selectedDateFilter = label;
+                              });
+                            }
+                          },
+                          selectedColor: Colors.blue,
+                          labelStyle: TextStyle(
+                            color: isSelected ? Colors.white : Colors.black,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+
+                SizedBox(height: 10),
+
+                /// 📂 CATEGORY CHIP
+                BlocBuilder<CategoryCubit, CategoryState>(
+                  builder: (context, state) {
+                    return SizedBox(
+                      height: 40,
+                      child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          /// ALL CHIP
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: ChoiceChip(
+                              label: Text("Semua"),
+                              selected: selectedCategoryFilter == null,
+                              onSelected: (_) {
+                                setState(() => selectedCategoryFilter = null);
+                              },
+                            ),
+                          ),
+
+                          ...state.categories.map((cat) {
+                            final isSelected =
+                                selectedCategoryFilter == cat.name;
+
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: ChoiceChip(
+                                label: Text(cat.name),
+                                selected: isSelected,
+                                selectedColor: Colors.green,
+                                labelStyle: TextStyle(
+                                  color:
+                                      isSelected ? Colors.white : Colors.black,
+                                ),
+                                onSelected: (_) {
+                                  setState(() {
+                                    selectedCategoryFilter =
+                                        isSelected ? null : cat.name;
+                                  });
+                                },
+                              ),
+                            );
+                          }).toList(),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+
+                SizedBox(height: 10),
+
+                /// 🔄 RESET
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      setState(() {
+                        selectedCategoryFilter = null;
+                        selectedDateFilter = "All";
+                        startDate = null;
+                        endDate = null;
+                      });
+                    },
+                    child: Text("Reset Filter"),
+                  ),
+                )
+              ],
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
